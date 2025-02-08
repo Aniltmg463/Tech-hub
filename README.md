@@ -27,9 +27,9 @@ MONGODB_URI= GIVE_YOUR_DATABASE_CONNECTION_LINK
 
 PORT= PORT_NUMBER_TO_RUN_YOUR_BACKEND
 
-To Run Frontend
+To Run client
 
-cd Frontend
+cd clent
 
     To install required packages
 
