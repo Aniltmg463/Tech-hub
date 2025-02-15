@@ -1,7 +1,8 @@
-import React from 'react';
-import Header from './Header';
-import Footer from './Footer';
+import React from "react";
+import Header from "./Header";
+import Footer from "./Footer";
 import { Helmet, HelmetProvider } from "react-helmet-async";
+import { ToastContainer } from "react-toastify";
 
 const Layout = ({ children, title, description, keywords, author }) => {
   return (
@@ -15,7 +16,10 @@ const Layout = ({ children, title, description, keywords, author }) => {
           <title>{title}</title>
         </Helmet>
         <Header />
-        <main style={{ minHeight: "70vh" }}>{children}</main>
+        <main style={{ minHeight: "70vh" }}>
+          <ToastContainer />
+          {children}
+        </main>
         <Footer />
       </div>
     </HelmetProvider>
@@ -31,17 +35,13 @@ Layout.defaultProps = {
 
 export default Layout;
 
-
-
 // const Layout = ( porps) => {
 //   return (
 //     <div>
 //         <Header/>
 //         <main style={{ minHeight: "80vh"}} > {porps.children}</main>
 //         <Footer/>
-     
+
 //     </div>
 //   )
 // }
-
-
