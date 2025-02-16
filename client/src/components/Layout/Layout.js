@@ -26,12 +26,13 @@ const Layout = ({ children, title, description, keywords, author }) => {
   );
 };
 
-Layout.defaultProps = {
-  title: "Tech Hub Website",
-  description: "Full stack project",
-  keywords: "react, seo, helmet, mern",
-  author: "Tech Anil",
-};
+//=> this is for default parameter
+// Layout.defaultProps = {
+//   title: "Tech Hub Website",
+//   description: "Full stack project",
+//   keywords: "react, seo, helmet, mern",
+//   author: "Tech Anil",
+// };
 
 export default Layout;
 

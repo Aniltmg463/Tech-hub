@@ -3,6 +3,7 @@ import Layout from "./../../components/Layout/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const Register = () => {
   const [name, setName] = useState("");
@@ -17,24 +18,40 @@ export const Register = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log(name, email, password, address, phone);
-    toast.success("Register Successfull");
+    //toast.success("Register Successfull", { autoClose: 3000 });
+
+    setTimeout(() => {
+      toast.success("Register Successful!");
+    }, 500); // Delays toast by 500ms
+
+    //**************************** */
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_API}/api/v1/auth/register`,
         { name, email, password, phone, address, answer }
       );
+      //console.log("API Response:", res);
       if (res.data.success) {
         toast.success(res.data.message);
         navigate("/login");
+
+        // setTimeout(() => {
+        //   toast.success(res.data.message);
+        //   navigate("/login");
+        // }, 3000);
       } else {
         toast.error(res.data.message);
       }
+      //**************************** */
+
+      //...................................//
       // if (res && res.data.success) {
       //   toast.success(res.data && res.data.message);
       //   navigate("/login");
       // } else {
       //   toast.error(res.data.message);
       // }
+      //...................................//
     } catch (error) {
       console.log(error);
       toast.error("Somwthing went wrong");
