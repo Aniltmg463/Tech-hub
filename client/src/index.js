@@ -8,14 +8,17 @@ import {
   BrowserRouter,
   unstable_HistoryRouter as HistoryRouter,
 } from "react-router-dom";
+import { AuthProvider } from "./context/auth";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <BrowserRouter
-    future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-  >
-    <App />
-  </BrowserRouter>
+  <AuthProvider>
+    <BrowserRouter
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
+      <App />
+    </BrowserRouter>
+  </AuthProvider>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,7 +1,7 @@
-/* ===================================
+/* ====================================
 ========= register page  */
 .form-container {
-    margin-top: 60px;
+    margin-top: 0px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -17,6 +17,15 @@
     background-color: #fff;
   }
   
+  .form-container h1 {
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    font-family: "Poppins", sans-serif;
+    color: #333; /* Change to your preferred color */
+    margin-bottom: 20px;
+}
+
   .form-container form .title {
     text-align: center;
     margin-bottom: 15px;

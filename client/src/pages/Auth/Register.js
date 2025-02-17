@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import Layout from "./../../components/Layout/Layout";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
+import "../../styles/AuthStyles.css";
 
 export const Register = () => {
   const [name, setName] = useState("");
@@ -22,7 +23,7 @@ export const Register = () => {
 
     setTimeout(() => {
       toast.success("Register Successful!");
-    }, 500); // Delays toast by 500ms
+    }, 3000); // Delays toast by 500ms
 
     //**************************** */
     try {
@@ -60,9 +61,10 @@ export const Register = () => {
 
   return (
     <Layout title="Register Tech Hub App">
-      <div className="register">
-        <h1>Register Page</h1>
+      <div className="form-container">
+        {/* <h1>Register Page</h1> */}
         <form onSubmit={handleSubmit}>
+          <h1>Register Page</h1>
           <div className="mb-3">
             <input
               type="text"
