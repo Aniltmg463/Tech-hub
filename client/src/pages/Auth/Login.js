@@ -11,8 +11,8 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [auth, setAuth] = useAuth();
 
-  const navigate = useNavigate(); //p2
-  const location = useLocation();
+  const navigate = useNavigate();
+  const location = useLocation(); //p2
 
   // Form function
   const handleSubmit = async (e) => {
@@ -22,7 +22,7 @@ const Login = () => {
         `${process.env.REACT_APP_API}/api/v1/auth/login`,
         { email, password }
       );
-      //console.log("API Response:", res);
+      console.log("API Response:", res);
       if (res.data.success) {
         toast.success(res.data.message);
         setAuth({
@@ -54,7 +54,7 @@ const Login = () => {
       <div className="form-container">
         {/* <h1>Register Page</h1> */}
         <form onSubmit={handleSubmit}>
-          <h1>Register Page</h1>
+          <h1>Login Page</h1>
           <div className="mb-3">
             <input
               type="email"

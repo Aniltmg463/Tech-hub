@@ -110,10 +110,12 @@ export const loginController = async (req, res) => {
       success: true,
       message: "Login successful",
       user: {
+        _id: user.id,
         name: user.name,
         email: user.email,
         phone: user.phone,
         address: user.address,
+        role: user.role,
       },
       token,
     });
