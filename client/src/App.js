@@ -16,6 +16,8 @@ import AdminRoute from "./components/Routes/AdminRoute";
 import CreateProduct from "./pages/Admin/CreateProduct";
 import CreateCategory from "./pages/Admin/CreateCategory";
 import Users from "./pages/Admin/Users";
+import Orders from "./pages/user/Orders";
+import Profile from "./pages/user/Profile";
 
 function App() {
   return (
@@ -29,6 +31,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/dashboard" element={<PrivateRoute />}>
           <Route path="user" element={<Dashboard />} />
+          <Route path="user/orders" element={<Orders />} />
+          <Route path="user/profile" element={<Profile />} />
         </Route>
         <Route path="/dashboard" element={<AdminRoute />}>
           <Route path="admin" element={<AdminDasboard />} />
