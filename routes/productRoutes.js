@@ -4,7 +4,9 @@ import {
   deleteProductController,
   getProductController,
   getSingleProductController,
+  productCountController,
   productFiltersController,
+  productListController,
   productPhotoController,
   updateProductController,
 } from "../controllers/productController.js";
@@ -13,7 +15,7 @@ import Formidable from "express-formidable";
 
 const router = express.Router();
 
-//routes
+// Routes
 router.post(
   "/create-product",
   requireSignIn,
@@ -22,7 +24,6 @@ router.post(
   createProductController
 );
 
-//routes
 router.put(
   "/update-product/:pid",
   requireSignIn,
@@ -31,64 +32,25 @@ router.put(
   updateProductController
 );
 
-// get all products
+// Get all products
 router.get("/get-product", getProductController);
 
-// get single products
+// Get single product
 router.get("/get-product/:slug", getSingleProductController);
 
-//get photo
+// Get product photo
 router.get("/product-photo/:pid", productPhotoController);
 
-//delete product
+// Delete product
 router.delete("/delete-product/:pid", deleteProductController);
-//filter product route
+
+// Filter products
 router.post("/product-filters", productFiltersController);
 
+//product count
+router.get("/product-count", productCountController);
+
+//product per page
+router.get("/product-list/:page", productListController);
+
 export default router;
-
-// import express from "express";
-// import {
-//   createProductController,
-//   updateProductController,
-//   getProductController,
-//   getSingleProductController,
-//   productPhotoController,
-//   deleteProductController,
-// } from "../controllers/productController.js";
-// import { isAdmin, requireSignIn } from "../middlewares/authmiddleware.js";
-// import formidable from "express-formidable";
-
-// const router = express.Router();
-
-// //routes
-// router.post(
-//   "/create-product",
-//   requireSignIn,
-//   isAdmin,
-//   formidable(),
-//   createProductController
-// );
-
-// //routes
-// router.put(
-//   "/update-product/:pid",
-//   requireSignIn,
-//   isAdmin,
-//   Formidable(),
-//   updateProductController
-// );
-
-// // get products
-// router.get("/get-product", getProductController);
-
-// // get single products
-// router.get("/get-product/:slug", getSingleProductController);
-
-// //get photo
-// router.get("/product-photo/:pid", productPhotoController);
-
-// //delete product
-// router.delete("/product/:pid", deleteProductController);
-
-// export default router;

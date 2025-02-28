@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import Layout from "../components/Layout/Layout";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -10,8 +10,11 @@ const HomePage = () => {
   const [categories, setCategories] = useState([]);
   const [checked, setChecked] = useState([]);
   const [radio, setRadio] = useState([]);
+  const [total, setTotal] = useState(0); // Changed to a number
+  const [page, setPage] = useState(1); // Changed to a number
+  const [loading, setLoading] = useState(false);
 
-  //get all categories
+  // Get all categories
   const getAllCategory = async () => {
     try {
       const { data } = await axios.get(
@@ -22,27 +25,62 @@ const HomePage = () => {
       }
     } catch (error) {
       console.log(error);
-      toast.error("Something weny wrong in getting category");
+      toast.error("Something went wrong in getting category");
     }
   };
 
-  useEffect(() => {
-    getAllCategory();
-  }, []);
-
-  //get all product
+  // Get all products
   const getAllProducts = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get(
-        `${process.env.REACT_APP_API}/api/v1/product/get-product`
+        `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`,
+        { headers: { "Cache-Control": "no-cache" } }
       );
-      setProducts(data.products);
+      setLoading(false);
+      if (page === 1) {
+        setProducts(data.products); // Set products for the first page
+      } else {
+        setProducts([...products, ...data.products]); // Append products for subsequent pages
+      }
     } catch (error) {
+      setLoading(false);
       console.log(error);
+      toast.error("Something went wrong in getting products");
     }
   };
 
-  //filter by category
+  // Get total product count
+  const getTotal = async () => {
+    try {
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/product/product-count`
+      );
+      setTotal(data?.total || 0); // Ensure it's a number
+    } catch (error) {
+      console.log(error);
+      toast.error("Something went wrong in getting total product count");
+    }
+  };
+
+  // Load more products
+  const loadmore = async () => {
+    try {
+      setLoading(true);
+      const { data } = await axios.get(
+        `${process.env.REACT_APP_API}/api/v1/product/product-list/${page}`,
+        { headers: { "Cache-Control": "no-cache" } }
+      );
+      setLoading(false);
+      setProducts([...products, ...data.products]); // Append new products
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+      toast.error("Something went wrong while loading more products");
+    }
+  };
+
+  // Filter by category
   const handleFilter = (value, id) => {
     let all = [...checked];
     if (value) {
@@ -53,91 +91,131 @@ const HomePage = () => {
     setChecked(all);
   };
 
-  // useEffect(() => {
-  //   getAllProducts();
-  // }, []);
-
-  useEffect(() => {
-    if (!checked.length || !radio.length) getAllProducts();
-  }, [checked.length, radio.length]);
-
-  useEffect(() => {
-    if (checked.length || radio.length) filterProduct();
-  }, [checked, radio]);
-
-  //get filterd product
+  // Get filtered products
   const filterProduct = async () => {
     try {
       const { data } = await axios.post(
-        // `${import.meta.env.VITE_REACT_APP_API}/api/v1/product/product-filters`,
         `${process.env.REACT_APP_API}/api/v1/product/product-filters`,
-        {
-          checked,
-          radio,
-        }
+        { checked, radio }
       );
       setProducts(data?.products);
     } catch (error) {
       console.log(error);
+      toast.error("Something went wrong while filtering products");
     }
   };
 
-  return (
-    <Layout
-      title="All Products - Best Offer"
-      description="Welcome to the Tech Hub website, your go-to platform for the latest in technology."
-      keywords="technology, programming, react, mern, seo"
-      author="Tech Anil"
-    >
-      {/* //   <h1>Home Page</h1>
-    //   <pre>{JSON.stringify(auth, null, 4)}</pre> */}
-      <div className="row mt-3">
-        <div className="col-md-3">
-          <h4 className="text-left md-10">Filter By Category</h4>
-          <div className="d-flex flex-column">
-            {categories?.map((c) => (
-              <Checkbox
-                key={c._id}
-                onChange={(e) => handleFilter(e.target.checked, c._id)}
-              >
-                {c.name}
-              </Checkbox>
-            ))}
-          </div>
+  // Reset filters
+  const resetFilters = () => {
+    setChecked([]);
+    setRadio([]);
+    setPage(1); // Reset page to 1
+    getAllProducts(); // Fetch products for the first page
+  };
 
-          {/* price filter */}
-          <h4 className="text-left mt-4">Filter By Prices</h4>
-          <div className="d-flex flex-column">
-            <Radio.Group onChange={(e) => setRadio(e.target.value)}>
-              {Prices?.map((p) => (
-                <div key={p._id}>
-                  <Radio value={p.array}>{p.name}</Radio>
+  // Fetch categories and total count on component mount
+  useEffect(() => {
+    getAllCategory();
+    getTotal();
+    getAllProducts();
+  }, []);
+
+  // Fetch products when page changes
+  useEffect(() => {
+    if (page > 1) {
+      loadmore();
+    }
+  }, [page]);
+
+  // Fetch products when filters change
+  useEffect(() => {
+    if (!checked.length && !radio.length) {
+      setPage(1); // Reset page to 1
+      getAllProducts();
+    } else {
+      filterProduct();
+    }
+  }, [checked, radio]);
+
+  return (
+    <Layout title="All Products - Best Offer">
+      <div className="container mt-4">
+        <div className="row">
+          <aside className="col-md-3 p-3 bg-light rounded">
+            <h4 className="text-dark">Filters</h4>
+            <div className="mb-3">
+              <h5>By Category</h5>
+              {categories?.map((c) => (
+                <Checkbox
+                  key={c._id}
+                  onChange={(e) => handleFilter(e.target.checked, c._id)}
+                >
+                  {c.name}
+                </Checkbox>
+              ))}
+            </div>
+            <div className="mb-3">
+              <h5>By Price</h5>
+              <Radio.Group onChange={(e) => setRadio(e.target.value)}>
+                {Prices?.map((p, index) => (
+                  <Radio key={index} value={p.array}>
+                    {p.name}
+                  </Radio>
+                ))}
+              </Radio.Group>
+            </div>
+            <button className="btn btn-danger w-100" onClick={resetFilters}>
+              Reset Filters
+            </button>
+          </aside>
+          <section className="col-md-9">
+            <h2 className="text-center mb-4">All Products</h2>
+            <div className="row">
+              {products?.map((p) => (
+                <div className="col-lg-4 col-md-6 col-sm-12 mb-4" key={p._id}>
+                  <div className="card border-0 shadow-sm">
+                    <img
+                      src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
+                      className="card-img-top rounded-top"
+                      alt={p.name}
+                      onError={(e) => {
+                        e.target.src = "/path/to/fallback-image.jpg";
+                      }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{p.name}</h5>
+                      <p className="card-text text-muted">
+                        {p.description.length > 30
+                          ? p.description.substring(0, 30) + "..."
+                          : p.description}
+                      </p>
+                      <h6 className="text-primary">$ {p.price}</h6>
+                      <div className="d-flex justify-content-between">
+                        <button className="btn btn-outline-primary">
+                          More Details
+                        </button>
+                        <button className="btn btn-primary">Add to Cart</button>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               ))}
-            </Radio.Group>
-          </div>
-        </div>
-        <div className="col-md-9">
-          {JSON.stringify(radio, null, 4)}
-          <h1 className="text-center">All Products</h1>
-          <div className="d-flex flex-wrap">
-            {products?.map((p) => (
-              <div className="card" style={{ width: "18rem" }}>
-                <img
-                  src={`${process.env.REACT_APP_API}/api/v1/product/product-photo/${p._id}`}
-                  className="card-img-top"
-                  alt={p.name}
-                />
-                <div className="card-body">
-                  <h5 className="card-title">{p.name} </h5>
-                  <p className="card-text">{p.description.substring(0, 30)}</p>
-                  <p className="card-text">{p.price}</p>
-                  <button class="btn btn-primary ms-1">More Details</button>
-                  <button class="btn btn-secondary ms-1">ADD TO CART</button>
-                </div>
-              </div>
-            ))}
-          </div>
+            </div>
+            <div className="m-2 p-3">
+              {products && products.length < total && (
+                <button
+                  className="btn btn-warning"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setPage(page + 1);
+                  }}
+                  disabled={loading}
+                >
+                  {loading ? "Loading ..." : "Loadmore"}
+                </button>
+              )}
+            </div>
+          </section>
         </div>
       </div>
     </Layout>
