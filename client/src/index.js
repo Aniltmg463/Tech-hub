@@ -9,16 +9,19 @@ import {
   unstable_HistoryRouter as HistoryRouter,
 } from "react-router-dom";
 import { AuthProvider } from "./context/auth";
+import { SearchProvider } from "./context/search";
 import "antd/dist/reset.css";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <AuthProvider>
-    <BrowserRouter
-      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
-    >
-      <App />
-    </BrowserRouter>
+    <SearchProvider>
+      <BrowserRouter
+        future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+      >
+        <App />
+      </BrowserRouter>
+    </SearchProvider>
   </AuthProvider>
 );
 

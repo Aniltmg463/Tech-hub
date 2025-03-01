@@ -3,9 +3,11 @@ import { NavLink, Link } from "react-router-dom";
 import { MdShoppingCart } from "react-icons/md";
 import { useAuth } from "../../context/auth";
 import toast from "react-hot-toast";
+import SearchInput from "../Form/SearchInput";
 
 const Header = () => {
   const [auth, setAuth] = useAuth();
+
   const handleLogout = () => {
     setAuth({
       ...auth,
@@ -38,6 +40,9 @@ const Header = () => {
             </Link>
             <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
               <li className="nav-item">
+                <SearchInput />
+              </li>
+              <li className="nav-item">
                 <NavLink to="/" className="nav-link">
                   Home
                 </NavLink>
@@ -55,24 +60,13 @@ const Header = () => {
                     </NavLink>
                   </li>
                   <li className="nav-item">
-                    <NavLink to="/login" className="nav-link" href="#">
+                    <NavLink to="/login" className="nav-link">
                       Login
                     </NavLink>
                   </li>
                 </>
               ) : (
                 <>
-                  {/* <li className="nav-item">
-                    <NavLink
-                      onClick={handleLogout}
-                      to="/login"
-                      className="nav-link"
-                      href="#"
-                    >
-                      Logout
-                    </NavLink>
-                  </li> */}
-
                   <li className="nav-item dropdown">
                     <NavLink
                       className="nav-link dropdown-toggle"
@@ -93,15 +87,6 @@ const Header = () => {
                         >
                           Dashboard
                         </NavLink>
-
-                        {/* <NavLink
-                          to={`/dashboard/${
-                            auth?.user?.role === 1 ? "admin" : "user"
-                          }`}
-                          className="dropdown-item"
-                        >
-                          Dashboard
-                        </NavLink> */}
                       </li>
                       <li>
                         <NavLink
@@ -117,7 +102,7 @@ const Header = () => {
                 </>
               )}
               <li className="nav-item">
-                <NavLink to="/cart" className="nav-link" href="#">
+                <NavLink to="/cart" className="nav-link">
                   Cart (0)
                 </NavLink>
               </li>
